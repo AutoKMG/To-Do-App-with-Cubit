@@ -109,11 +109,13 @@ Widget buildTaskItem(Map model, context) {
                 ? () {
                     appHandler.updatingDatabase('done', model['id']);
                   }
-                : null,
-            icon: Icon(
-              Icons.check_circle_outline_outlined,
-              color: model['status'] != 'done' ? Colors.green : Colors.grey,
-            )),
+                : () {
+                    appHandler.updatingDatabase('new', model['id']);
+                  },
+            icon: model['status'] != 'done'
+                ? Icon(Icons.check_circle_outline_outlined)
+                : Icon(Icons.restart_alt_rounded),
+            color: Colors.green),
         IconButton(
           onPressed: () {
             appHandler.updatingDatabase('archived', model['id']);

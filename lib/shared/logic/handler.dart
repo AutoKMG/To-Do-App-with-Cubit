@@ -103,28 +103,24 @@ class AppHandler extends Cubit<AppState> {
     database.rawQuery('SELECT * FROM tasks').then(
       (value) {
         if (!value.isEmpty) {
-          print(value);
           value
               .where((item) => item['status'] == 'new')
               .toList()
               .forEach((element) {
             newTasks.add(Task.fromJson(element));
           });
-          print(newTasks);
           value
               .where((item) => item['status'] == 'done')
               .toList()
               .forEach((element) {
             doneTasks.add(Task.fromJson(element));
           });
-          print(doneTasks);
           value
               .where((item) => item['status'] == 'archived')
               .toList()
               .forEach((element) {
             archivedTasks.add(Task.fromJson(element));
           });
-          print(archivedTasks);
         } else {
           newTasks = [];
           doneTasks = [];

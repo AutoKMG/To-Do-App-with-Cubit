@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:todo_app/models/task.dart';
 import 'package:todo_app/modules/archived_tasks/archived_tasks_screen.dart';
 import 'package:todo_app/modules/done_tasks/done_tasks_screen.dart';
 import 'package:todo_app/modules/new_tasks/new_tasks_screen.dart';
@@ -18,9 +19,9 @@ class AppHandler extends Cubit<AppState> {
   List<String> titles = ['New Tasks', 'Done Tasks', 'Archived Tasks'];
   Database database;
   bool isBottomSheetShown = false;
-  List<Map> newTasks = [];
-  List<Map> doneTasks = [];
-  List<Map> archivedTasks = [];
+  List<Task> newTasks = [];
+  List<Task> doneTasks = [];
+  List<Task> archivedTasks = [];
   void changeCurrentIndex(int index) {
     currentIndex = index;
     emit(AppStateChangeCurrentIndex());
@@ -100,11 +101,24 @@ class AppHandler extends Cubit<AppState> {
       (value) {
         if (!value.isEmpty) {
           value.forEach((element) {
-            newTasks = value.where((item) => item['status'] == 'new').toList();
-            doneTasks =
-                value.where((item) => item['status'] == 'done').toList();
-            archivedTasks =
-                value.where((item) => item['status'] == 'archived').toList();
+            value
+                .where((item) => item['status'] == 'new')
+                .toList()
+                .forEach((element) {
+              newTasks.add(Task.fromJson(element));
+            });
+            value
+                .where((item) => item['status'] == 'done')
+                .toList()
+                .forEach((element) {
+              doneTasks.add(Task.fromJson(element));
+            });
+            value
+                .where((item) => item['status'] == 'archived')
+                .toList()
+                .forEach((element) {
+              archivedTasks.add(Task.fromJson(element));
+            });
           });
         } else {
           newTasks = [];

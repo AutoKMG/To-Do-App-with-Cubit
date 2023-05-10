@@ -1,6 +1,7 @@
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:todo_app/models/task.dart';
 import 'package:todo_app/shared/logic/handler.dart';
 
 Widget defaultButton({
@@ -72,7 +73,7 @@ Widget defaultFormField({
         border: OutlineInputBorder(),
       ),
     );
-Widget buildTaskItem(Map model, context) {
+Widget buildTaskItem(Task model, context) {
   AppHandler appHandler = BlocProvider.of<AppHandler>(context);
   return Padding(
     padding: const EdgeInsets.all(20),
@@ -80,7 +81,7 @@ Widget buildTaskItem(Map model, context) {
       children: [
         CircleAvatar(
           radius: 40.0,
-          child: Text('${model['time']}'),
+          child: Text('${model.time}'),
         ),
         SizedBox(
           width: 20,
@@ -91,43 +92,43 @@ Widget buildTaskItem(Map model, context) {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                '${model['title']}',
+                '${model.title}',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
               SizedBox(
                 height: 5,
               ),
               Text(
-                '${model['date']}',
+                '${model.date}',
                 style: TextStyle(color: Colors.grey),
               )
             ],
           ),
         ),
         IconButton(
-            onPressed: model['status'] != 'done'
+            onPressed: model.status != 'done'
                 ? () {
-                    appHandler.updatingDatabase('done', model['id']);
+                    appHandler.updatingDatabase('done', model.id);
                   }
                 : () {
-                    appHandler.updatingDatabase('new', model['id']);
+                    appHandler.updatingDatabase('new', model.id);
                   },
-            icon: model['status'] != 'done'
+            icon: model.status != 'done'
                 ? Icon(Icons.check_circle_outline_outlined)
                 : Icon(Icons.restart_alt_rounded),
             color: Colors.green),
         IconButton(
           onPressed: () {
-            appHandler.updatingDatabase('archived', model['id']);
+            appHandler.updatingDatabase('archived', model.id);
           },
           icon: Icon(
             Icons.archive,
-            color: model['status'] != 'archived' ? Colors.blue : Colors.grey,
+            color: model.status != 'archived' ? Colors.blue : Colors.grey,
           ),
         ),
         IconButton(
             onPressed: () {
-              appHandler.deletingFromDatabase(model['id']);
+              appHandler.deletingFromDatabase(model.id);
             },
             icon: Icon(
               Icons.delete,
@@ -138,7 +139,7 @@ Widget buildTaskItem(Map model, context) {
   );
 }
 
-Widget tasksBuilder(List tasks) {
+Widget tasksBuilder(List<Task> tasks) {
   return ConditionalBuilder(
     condition: tasks.length > 0,
     builder: (context) {
